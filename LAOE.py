@@ -2,33 +2,30 @@ import constant
 import math
 #Main Light Area of Effect function
 def LAOE(alt, azi, orien, userPosition, blindsState):
-    
-    #Check if it is possible for the sun to hit anyone in the room
-
-    #If blinds are fully closed, return how much/if they should be opened
 
     #Corners are defined from the perspective of a person inside the room looking out
     #Using azimuth relative to the window
-    projectionCoords = getProjectionCoords(alt, azi + orien, blindsState)
-    totalWinHeight = constant.height + constant.winHeight - blindsState
+    projectionCoords = getProjectionCoords(alt, azi - orien)
+    totalWinHeight = constant.height + constant.winHeight
     
     #Coords for the window
-    winLeftUpper = (-constant.winWidth / 2.0, totalWinHeight)
-    winRightUpper = (constant.winWidth / 2.0, totalWinHeight)
-    winLeftLower = (constant.winWidth / 2.0, 0.0)
-    winRightLower = (constant.winWidth / 2.0, 0.0)
+    winLeftUpper = (-constant.winWidth / 2.0, 0.0, totalWinHeight)
+    winRightUpper = (constant.winWidth / 2.0, 0.0, totalWinHeight)
+    winLeftLower = (constant.winWidth / 2.0, 0.0, 0.0)
+    winRightLower = (constant.winWidth / 2.0, 0.0, 0.0)
     windowCoords = (winLeftUpper, winRightUpper, winLeftLower, winRightLower)
 
-    #Check if the person is affected by the sun, if so adjust the blinds
-    if (intersect(windowCoords, projectionCoords, userPosition, blindsState)):
-        return
+    #Check if the person is affected by the sun, if not then open blinds fully
+    if (not intersect(windowCoords, projectionCoords, userPosition)):
+        return 1
 
-    #If not, try to maximize sunlight in the room
-    return 
+    #If not, find the necessary change
 
-def intersect(windowCoords, projectionCoords, userPosition, blindsState):
+    return blindsChange(windowCoords, projectionCoords, userPosition, blindsState)
 
-    totalWinHeight = constant.height + constant.winHeight - blindsState
+def intersect(windowCoords, projectionCoords, userPosition):
+
+    totalWinHeight = constant.height + constant.winHeight
 
     (wLeftUpper, wRightUpper, wLeftLower, wRightLower) = windowCoords
     (pLeftUpper, pRightUpper, pLeftLower, pRightLower) = projectionCoords
@@ -46,46 +43,75 @@ def intersect(windowCoords, projectionCoords, userPosition, blindsState):
     #We are doing run / rise because we are checking for vertical intersection from a side view
     #of the window
     slopeUpper = (totalWinHeight) / (wLeftUpperY - pLeftUpperY)
-    constUpper = wLeftUpperY - (wLeftUpperX * slopeUpper)
+    constUpper = totalWinHeight - (wLeftUpperY * slopeUpper)
     slopeLower = (constant.height) / (wLeftLowerY - pLeftLowerY)
-    constLower = wLeftLowerY - (wLeftLowerX * slopeLower)
+    constLower = constant.height - (wLeftLowerY * slopeLower)
 
     #Check for horizontal intersection
     slopeLeft = (wLeftUpperY - pLeftUpperY) / (wLeftUpperX - pLeftUpperX)
+    constLeft = wLeftUpperY - (wLeftUpperX * slopeLeft)
     slopeRight = (wLeftLowerY - pLeftLowerY) / (wLeftLowerX - pLeftLowerX)
+    constRight = wLeftLowerY - (wLeftLowerX * slopeRight)
 
+    # Since x increases left to right but y increases up to down, we invert the y inequality
+    if ((z < ((slopeUpper * y) + constUpper)) and (z > ((slopeLower * y) + constLower)) and
+        (y < ((slopeLeft * x) + constLeft)) and (y > ((slopeRight * x) + constRight) )):
+        return True
 
     return False
 
+def lineEquation(point1, point2):
+    (x1, y1) = point1
+    (x2, y2) = point2
+    slope = (y1 - y2) / (x1 - x2)
+    constant = y1 - (slope * x1)
+    return (slope, constant)
+
 #Gets the coordinates of the light projected onto the floor
-def getProjectionCoords(alt, azi, blindsState):
+def getProjectionCoords(alt, azi):
     #origin is set at the floor, with x value at the middle of the window 
 
     #TODO: get the new "winHeight" from the blindsState (depends on how much the blinds are closed at the moment
-    totalWinHeight = constant.winHeight - blindsState
+    totalWinHeight = constant.winHeight
 
     #left upper corner
-    leftUpperX = ((constant.height + totalWinHeight) / math.tan(math.radians(alt))) * math.sin(math.radians(azi)) - (constant.winWidth / 2.0)
-    leftUpperY = ((constant.height + totalWinHeight) / math.tan(math.radians(alt))) * math.cos(math.radians(azi))
+    leftUpperX = ((constant.height + totalWinHeight) / math.tan(math.radians(alt))) * math.tan(math.radians(azi)) - (constant.winWidth / 2.0)
+    leftUpperY = ((constant.height + totalWinHeight) / math.tan(math.radians(alt)))
     leftUpper = (leftUpperX, leftUpperY)
 
     #right upper corner
-    rightUpperX = ((constant.height + totalWinHeight) / math.tan(math.radians(alt))) * math.sin(math.radians(azi)) + (constant.winWidth / 2.0)
-    rightUpperY = ((constant.height + totalWinHeight) / math.tan(math.radians(alt))) * math.cos(math.radians(azi))
+    rightUpperX = ((constant.height + totalWinHeight) / math.tan(math.radians(alt))) * math.tan(math.radians(azi)) + (constant.winWidth / 2.0)
+    rightUpperY = ((constant.height + totalWinHeight) / math.tan(math.radians(alt)))
     rightUpper = (rightUpperX, rightUpperY)
 
     #left lower corner
-    leftLowerX = (constant.height / math.tan(math.radians(alt))) * math.sin(math.radians(azi)) - (constant.winWidth / 2.0)
-    leftLowerY = (constant.height / math.tan(math.radians(alt))) * math.cos(math.radians(azi))
+    leftLowerX = (constant.height / math.tan(math.radians(alt))) * math.tan(math.radians(azi)) - (constant.winWidth / 2.0)
+    leftLowerY = (constant.height / math.tan(math.radians(alt)))
     leftLower = (leftLowerX, leftLowerY)
 
     #right lower corner
-    rightLowerX = (constant.height / math.tan(math.radians(alt))) * math.sin(math.radians(azi)) + (constant.winWidth / 2.0)
-    rightLowerY = (constant.height / math.tan(math.radians(alt))) * math.cos(math.radians(azi))
+    rightLowerX = (constant.height / math.tan(math.radians(alt))) * math.tan(math.radians(azi)) + (constant.winWidth / 2.0)
+    rightLowerY = (constant.height / math.tan(math.radians(alt)))
     rightLower = (rightLowerX, rightLowerY)
 
     return (leftUpper, rightUpper, leftLower, rightLower)
 
 #Finds change to blinds necessary
-def blindsChange():
-    return
+def blindsChange(windowCoords, projectionCoords, userPosition, blindsState):
+
+    # Find z value of top of blinds so that y value of projection of blinds is at coords of face
+    (x, y, z) = userPosition
+    offset = 0
+
+    (wLeftUpper, _, _, _) = windowCoords
+    (pLeftUpper, _, _, _) = projectionCoords
+
+    (_, wY, wZ) = wLeftUpper
+    (_, pY, pZ) = pLeftUpper
+
+    (slope, _) = lineEquation((wY, wZ), (pY, pZ))
+
+    constant = z - (slope * y)
+    result = constant
+
+    return blindsState - (result + offset)
