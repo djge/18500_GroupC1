@@ -17,7 +17,7 @@ def LAOE(alt, azi, orien, userPosition, blindsState):
 
     #Check if the person is affected by the sun, if not then open blinds fully
     if (not intersect(windowCoords, projectionCoords, userPosition)):
-        return 1
+        return constant.winHeight
 
     #If not, find the necessary change
 
@@ -64,8 +64,8 @@ def lineEquation(point1, point2):
     (x1, y1) = point1
     (x2, y2) = point2
     slope = (y1 - y2) / (x1 - x2)
-    constant = y1 - (slope * x1)
-    return (slope, constant)
+    c = y1 - (slope * x1)
+    return (slope, c)
 
 #Gets the coordinates of the light projected onto the floor
 def getProjectionCoords(alt, azi):
@@ -111,7 +111,7 @@ def blindsChange(windowCoords, projectionCoords, userPosition, blindsState):
 
     (slope, _) = lineEquation((wY, wZ), (pY, pZ))
 
-    constant = z - (slope * y)
-    result = constant
+    c = z - (slope * y)
+    result = min(max(c, constant.height), constant.height + constant.winHeight)
 
-    return blindsState - (result + offset)
+    return blindsState - (result - constant.height + offset)
