@@ -29,10 +29,10 @@ def intersect(windowCoords, projectionCoords, userPosition):
 
     (wLeftUpper, wRightUpper, wLeftLower, wRightLower) = windowCoords
     (pLeftUpper, pRightUpper, pLeftLower, pRightLower) = projectionCoords
-    (wLeftUpperX, wLeftUpperY) = wLeftUpper
-    (wRightUpperX, wRightUpperY) = wRightUpper
-    (wLeftLowerX, wLeftLowerY) = wLeftLower
-    (wRightLowerX, wRightLowerY) = wRightLower
+    (wLeftUpperX, wLeftUpperY, _) = wLeftUpper
+    (wRightUpperX, wRightUpperY, _) = wRightUpper
+    (wLeftLowerX, wLeftLowerY, _) = wLeftLower
+    (wRightLowerX, wRightLowerY,_) = wRightLower
     (pLeftUpperX, pLeftUpperY) = pLeftUpper
     (pRightUpperX, pRightUpperY) = pRightUpper
     (pLeftLowerX, pLeftLowerY) = pLeftLower
