@@ -75,22 +75,22 @@ def getProjectionCoords(alt, azi):
     totalWinHeight = constant.winHeight
 
     #left upper corner
-    leftUpperX = ((constant.height + totalWinHeight) / math.tan(math.radians(alt))) * math.tan(math.radians(azi)) - (constant.winWidth / 2.0)
+    leftUpperX = ((constant.height + totalWinHeight) / math.tan(math.radians(alt))) * math.sin(math.radians(180 - azi)) - (constant.winWidth / 2.0)
     leftUpperY = ((constant.height + totalWinHeight) / math.tan(math.radians(alt)))
     leftUpper = (leftUpperX, leftUpperY)
 
     #right upper corner
-    rightUpperX = ((constant.height + totalWinHeight) / math.tan(math.radians(alt))) * math.tan(math.radians(azi)) + (constant.winWidth / 2.0)
+    rightUpperX = ((constant.height + totalWinHeight) / math.tan(math.radians(alt))) * math.cos(math.radians(180 - azi)) + (constant.winWidth / 2.0)
     rightUpperY = ((constant.height + totalWinHeight) / math.tan(math.radians(alt)))
     rightUpper = (rightUpperX, rightUpperY)
 
     #left lower corner
-    leftLowerX = (constant.height / math.tan(math.radians(alt))) * math.tan(math.radians(azi)) - (constant.winWidth / 2.0)
+    leftLowerX = (constant.height / math.tan(math.radians(alt))) * math.sin(math.radians(180 - azi)) - (constant.winWidth / 2.0)
     leftLowerY = (constant.height / math.tan(math.radians(alt)))
     leftLower = (leftLowerX, leftLowerY)
 
     #right lower corner
-    rightLowerX = (constant.height / math.tan(math.radians(alt))) * math.tan(math.radians(azi)) + (constant.winWidth / 2.0)
+    rightLowerX = (constant.height / math.tan(math.radians(alt))) * math.cos(math.radians(180 - azi)) + (constant.winWidth / 2.0)
     rightLowerY = (constant.height / math.tan(math.radians(alt)))
     rightLower = (rightLowerX, rightLowerY)
 
