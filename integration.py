@@ -1,6 +1,7 @@
 import pyrealsense2 as rs
 import cv2
 import numpy as np
+import serial
 
 import os
 import time
@@ -23,6 +24,9 @@ def main():
 
     horiz_fov = 87
     vert_fov = 58
+    dataRate = 9600
+    arduino = serial.Serial("COM3", dataRate, timeout=2)
+    arduino.open()
 
     try:
         while True:
@@ -52,10 +56,8 @@ def main():
             
             face = front #if len(front) != 0 else side
 
-            print(color_img.shape)
-
-            horiz_angle = math.radians(horiz_fov/color_img.shape[0])
-            vert_angle = math.radians(vert_fov/color_img.shape[1])
+            horiz_angle = math.radians(horiz_fov/color_img.shape[1])
+            vert_angle = math.radians(vert_fov/color_img.shape[0])
             
             center_img = (color_img.shape[1]/2, color_img.shape[0]/2)
             face_distances = [] #array of tuples (x,y)
@@ -63,7 +65,6 @@ def main():
             for (x, y, w, h) in face:
                 x_mid, y_mid = [int(x + w/2), int(y + h)]
                 #TODO: check if chin is even in camera to prevent crashes
-                print(x_mid + center_img[0], depth_frame.get_width(), y_mid + center_img[1], depth_frame.get_height())
                 if x_mid > 0 and x_mid < color_img.shape[1] and y_mid > 0 and y_mid < color_img.shape[0]: 
                     d = depth_frame.get_distance(x_mid, y_mid)
                     pixels_diff_x, pixels_diff_y = x_mid - center_img[0], y_mid - center_img[1]
@@ -87,9 +88,14 @@ def main():
             if face_distances:
                 azimuth, altitude = get_suncalc(address)
                 value = LAOE.LAOE(altitude, azimuth, 0, face_distances[0], 0)
-                print(value)
+                print("Sending to Arduino: ", value)
+                arduino.write(value)
+            else:
+                arduino.write(0)
 
+            time.sleep(6)
             cv2.waitKey(30)
+            
 
     finally:
         pipeline.stop()
