@@ -74,25 +74,27 @@ def getProjectionCoords(alt, azi):
     #TODO: get the new "winHeight" from the blindsState (depends on how much the blinds are closed at the moment
     totalWinHeight = constant.winHeight
 
+    offset = -20
+
     #left upper corner
     leftUpperX = ((constant.height + totalWinHeight) / math.tan(math.radians(alt))) * math.sin(math.radians(180 - azi)) - (constant.winWidth / 2.0)
-    leftUpperY = ((constant.height + totalWinHeight) / math.tan(math.radians(alt)))
-    leftUpper = (leftUpperX, leftUpperY)
+    leftUpperY = ((constant.height + totalWinHeight) / math.tan(math.radians(alt)))* math.cos(math.radians(180 - azi))
+    leftUpper = (leftUpperX + offset, leftUpperY + offset)
 
     #right upper corner
-    rightUpperX = ((constant.height + totalWinHeight) / math.tan(math.radians(alt))) * math.cos(math.radians(180 - azi)) + (constant.winWidth / 2.0)
-    rightUpperY = ((constant.height + totalWinHeight) / math.tan(math.radians(alt)))
-    rightUpper = (rightUpperX, rightUpperY)
+    rightUpperX = ((constant.height + totalWinHeight) / math.tan(math.radians(alt))) * math.sin(math.radians(180 - azi)) + (constant.winWidth / 2.0)
+    rightUpperY = ((constant.height + totalWinHeight) / math.tan(math.radians(alt))) * math.cos(math.radians(180 - azi))
+    rightUpper = (rightUpperX + offset, rightUpperY + offset)
 
     #left lower corner
     leftLowerX = (constant.height / math.tan(math.radians(alt))) * math.sin(math.radians(180 - azi)) - (constant.winWidth / 2.0)
-    leftLowerY = (constant.height / math.tan(math.radians(alt)))
-    leftLower = (leftLowerX, leftLowerY)
+    leftLowerY = (constant.height / math.tan(math.radians(alt)) )* math.cos(math.radians(180 - azi))
+    leftLower = (leftLowerX + offset, leftLowerY + offset)
 
     #right lower corner
-    rightLowerX = (constant.height / math.tan(math.radians(alt))) * math.cos(math.radians(180 - azi)) + (constant.winWidth / 2.0)
-    rightLowerY = (constant.height / math.tan(math.radians(alt)))
-    rightLower = (rightLowerX, rightLowerY)
+    rightLowerX = (constant.height / math.tan(math.radians(alt))) * math.sin(math.radians(180 - azi)) + (constant.winWidth / 2.0)
+    rightLowerY = (constant.height / math.tan(math.radians(alt)))* math.cos(math.radians(180 - azi))
+    rightLower = (rightLowerX + offset, rightLowerY + offset)
 
     return (leftUpper, rightUpper, leftLower, rightLower)
 
