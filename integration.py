@@ -9,7 +9,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import math
 from getsuncalc import get_suncalc
-from constant import address, camera_height
+from constant import address, camera_height, winHeight
 
 import LAOE
 
@@ -22,14 +22,18 @@ def main():
     front_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     side_cascade = cv2.CascadeClassifier('haarcascade_profileface.xml')
 
-    horiz_fov = 87
+    horiz_fov = 87 #degrees
     vert_fov = 58
+    blinds_state = winHeight
+    orientation = 0 #angle window is relative to north
+
     dataRate = 9600
     arduino = serial.Serial("COM3", dataRate, timeout=2)
     arduino.open()
 
     try:
         while True:
+            
             #fetches latest unread frames (better for single camera vs. poll_for_frames)
             unaligned_frames = pipeline.wait_for_frames()
 
@@ -87,11 +91,19 @@ def main():
 
             if face_distances:
                 azimuth, altitude = get_suncalc(address)
-                value = LAOE.LAOE(altitude, azimuth, 0, face_distances[0], 0)
-                print("Sending to Arduino: ", value)
-                arduino.write(value)
+
+                photoresistor = arduino.readline().decode().rstrip()  # read photoresistor input
+
+                # distance (from bottom of window) blinds should be
+                current_blinds_state = LAOE.LAOE(altitude, azimuth, orientation, face_distances[0], blinds_state, photoresistor)
+                move = blinds_state - current_blinds_state
+                print("Sending to Arduino: ", move)
+                # send number of rotations and direction
+                arduino.write(move, move < 0)
+                blinds_state = current_blinds_state
             else:
                 arduino.write(0)
+                blinds_state = 0
 
             time.sleep(6)
             cv2.waitKey(30)
