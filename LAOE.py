@@ -1,7 +1,10 @@
 import constant
 import math
 #Main Light Area of Effect function
-def LAOE(alt, azi, orien, userPosition, blindsState):
+def LAOE(alt, azi, orien, userPosition, blindsState, light):
+
+    if (light):
+        return constant.winHeight
 
     #Corners are defined from the perspective of a person inside the room looking out
     #Using azimuth relative to the window
@@ -11,7 +14,7 @@ def LAOE(alt, azi, orien, userPosition, blindsState):
     #Coords for the window
     winLeftUpper = (-constant.winWidth / 2.0, 0.0, totalWinHeight)
     winRightUpper = (constant.winWidth / 2.0, 0.0, totalWinHeight)
-    winLeftLower = (constant.winWidth / 2.0, 0.0, 0.0)
+    winLeftLower = (-constant.winWidth / 2.0, 0.0, 0.0)
     winRightLower = (constant.winWidth / 2.0, 0.0, 0.0)
     windowCoords = (winLeftUpper, winRightUpper, winLeftLower, winRightLower)
 
