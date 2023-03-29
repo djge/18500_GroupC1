@@ -65,10 +65,9 @@ def main():
 
     avg_error = [element/(int(example_num) - 1) for element in avg_error]
 
+    print("Average error:", avg_error)
     #can display a particular example
     #display(1)
-    
-    print("Average error:", avg_error)
 
 if __name__ == '__main__':
     main()

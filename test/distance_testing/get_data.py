@@ -10,10 +10,10 @@ def main():
     pipeline.start()
     config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
     config.enable_stream(rs.stream.depth, 640, 480, rs.format.bgr8, 30)
-    f_counter = open('./distance_test_data/data_counter.txt', 'rw')
+    f_counter = open('./distance_test_data/data_counter.txt', 'r')
     front_cascade = cv2.CascadeClassifier('../../haarcascade_frontalface_default.xml')
-
-    datapoint_num = f.read()
+    datapoint_num = f_counter.read()
+    f_counter.close()
     try:
         unaligned_frames = pipeline.wait_for_frames()
 
@@ -40,8 +40,8 @@ def main():
         for (x, y, w, h) in face:
             x_mid, y_mid = [int(x + w/2), int(y + h)]
             if x_mid > 0 and x_mid < color_img.shape[1] and y_mid > 0 and y_mid < color_img.shape[0]:
-                np.save('./distance_test_data/color' + f_counter +'.npy', color_img)
-                f = open('./distance_test_data/depth' + f_counter + '.txt', 'w')
+                np.save('./distance_test_data/color' + datapoint_num +'.npy', color_img)
+                f = open('./distance_test_data/depth' + datapoint_num + '.txt', 'w')
                 f.write(str(depth_frame.get_distance(x_mid, y_mid)))
                 f.close()
             else:
@@ -50,6 +50,7 @@ def main():
     finally:
         pipeline.stop()
 
+    f_counter = open('./distance_test_data/data_counter.txt', 'w')
     f_counter.write(str(int(datapoint_num) + 1))
     f_counter.close()
         
