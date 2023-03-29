@@ -10,11 +10,8 @@ def main():
     pipeline.start()
     config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
     config.enable_stream(rs.stream.depth, 640, 480, rs.format.bgr8, 30)
-    front_cascade = cv2.CascadeClassifier('../../haarcascade_frontalface_default.xml')
-
-    horiz_fov = 87 #degrees
-    vert_fov = 58
     f_counter = open('./distance_test_data/data_counter.txt', 'rw')
+    front_cascade = cv2.CascadeClassifier('../../haarcascade_frontalface_default.xml')
 
     datapoint_num = f.read()
     try:
@@ -34,33 +31,22 @@ def main():
 
         face = front_cascade.detectMultiScale(gray, 1.1, 4)
         if len(face) == 0:
-            print("NO FACES FOUND")
+            print("WARNING: No faces found")
             return
-
-        horiz_angle = math.radians(horiz_fov/color_img.shape[1])
-        vert_angle = math.radians(vert_fov/color_img.shape[0])
-        
-        origin = (color_img.shape[1]/2, color_img.shape[0]/2)
-        face_distances = [] #array of tuples (x,y)
+        if len(face) > 1:
+            print("WARNING: More than one face found")
+            return
 
         for (x, y, w, h) in face:
             x_mid, y_mid = [int(x + w/2), int(y + h)]
-            #save data of first face found
-            np.save('./distance_test_data/color' + f_counter +'.npy', color_img)
-            f = open('./distance_test_data/depth' + f_counter + '.txt', 'w')
-            f.write(str(depth_frame.get_distance(x_mid, y_mid)))
-            f.close()
-            if x_mid > 0 and x_mid < color_img.shape[1] and y_mid > 0 and y_mid < color_img.shape[0]: 
-                d = depth_frame.get_distance(x_mid, y_mid)
-                
-                pixels_diff_x, pixels_diff_y = x_mid - origin[0],  origin[1] - y_mid
-                angle_x, angle_y = pixels_diff_x*horiz_angle, pixels_diff_y*vert_angle
-
-                face_z = d*math.sin(angle_y) + camera_height
-                face_y = d*math.cos(angle_y)*math.cos(angle_x)
-                face_x = d*math.cos(angle_y)*math.sin(angle_x)
-
-                face_distances.append((face_x, face_y, face_z))
+            if x_mid > 0 and x_mid < color_img.shape[1] and y_mid > 0 and y_mid < color_img.shape[0]:
+                np.save('./distance_test_data/color' + f_counter +'.npy', color_img)
+                f = open('./distance_test_data/depth' + f_counter + '.txt', 'w')
+                f.write(str(depth_frame.get_distance(x_mid, y_mid)))
+                f.close()
+            else:
+                print("WARNING: Chin pixel is out of image")
+                return
     finally:
         pipeline.stop()
 
