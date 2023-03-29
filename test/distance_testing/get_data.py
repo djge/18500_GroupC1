@@ -10,7 +10,7 @@ def main():
     pipeline.start()
     config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
     config.enable_stream(rs.stream.depth, 640, 480, rs.format.bgr8, 30)
-    front_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    front_cascade = cv2.CascadeClassifier('../../haarcascade_frontalface_default.xml')
 
     horiz_fov = 87 #degrees
     vert_fov = 58
