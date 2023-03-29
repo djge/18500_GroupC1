@@ -19,7 +19,10 @@ def LAOE(alt, azi, orien, userPosition, blindsState, light):
     windowCoords = (winLeftUpper, winRightUpper, winLeftLower, winRightLower)
 
     #Check if the person is affected by the sun, if not then open blinds fully
-    if (not intersect(windowCoords, projectionCoords, userPosition)):
+    inLAOE = intersect(windowCoords, projectionCoords, userPosition)
+    print(inLAOE)
+
+    if (not inLAOE):
         return constant.winHeight
 
     #If not, find the necessary change
