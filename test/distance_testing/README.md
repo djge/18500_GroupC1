@@ -7,3 +7,6 @@ To delete the most recently taken data:
 1. Delete color_n.py
 2. Delete depth_n.py
 3. Decrease the number in data_counter.txt by 1
+
+To display the data of an example:
+1. Run display(example_number) in the main function of test_data.py

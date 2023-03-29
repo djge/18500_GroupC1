@@ -29,8 +29,6 @@ def main():
             print("FRAME NOT FOUND")
             return
         color_img = np.asanyarray(color_frame.get_data())
-        colorizer = rs.colorizer()
-        depth_img = np.asanyarray(colorizer.colorize(depth_frame).get_data())
 
         gray = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
 
@@ -63,15 +61,6 @@ def main():
                 face_x = d*math.cos(angle_y)*math.sin(angle_x)
 
                 face_distances.append((face_x, face_y, face_z))
-
-            cv2.rectangle(color_img, (x, y), (x+w, y+h), (255, 0, 0), 2)
-        
-        #put images next to each other to display
-        display_images = np.hstack((color_img, depth_img))
-        #Show CV window
-        cv2.namedWindow('RealSense', cv2.WINDOW_KEEPRATIO)
-        cv2.resizeWindow('RealSense', 426, 240)
-        cv2.imshow('RealSense', display_images)
     finally:
         pipeline.stop()
 

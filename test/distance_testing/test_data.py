@@ -3,7 +3,9 @@ import cv2
 import math
 from constant import address, camera_height, winHeight, orientation
 
-def display(color_img):
+def display(example_num):
+    [color_img, x, y, w, h] = predict(example_num, display=True)
+    cv2.rectangle(color_img, (x, y), (x+w, y+h), (255, 0, 0), 2)
     while(True):
         cv2.namedWindow('RealSense', cv2.WINDOW_KEEPRATIO)
         cv2.resizeWindow('RealSense', 426, 240)
@@ -14,8 +16,8 @@ def calculate_error(predicted, real):
     error = [abs((predicted[i] - real[i])/real[i]) for i in range(3)]
     return error
 
-def predict(example_num):
-    front_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+def predict(example_num, display = False):
+    front_cascade = cv2.CascadeClassifier('../../haarcascade_frontalface_default.xml')
     color_img = np.load('distance_test_data/color'+str(example_num)+'.npy') # load
 
     f = open("distance_test_data/depth"+str(example_num)+'.txt', "r")
@@ -33,8 +35,9 @@ def predict(example_num):
     calculated_distance = []
     
     for (x, y, w, h) in front:
+        if(display):
+            return color_img, x, y, w, h
         x_mid, y_mid = [int(x + w/2), int(y + h)]
-        cv2.rectangle(color_img, (x, y), (x+w, y+h), (255, 0, 0), 2)
         pixels_diff_x, pixels_diff_y = x_mid - origin[0],  origin[1] - y_mid
         angle_x, angle_y = pixels_diff_x*horiz_angle, pixels_diff_y*vert_angle
         face_z = d*math.sin(angle_y) + camera_height
@@ -61,6 +64,9 @@ def main():
     f_data.close()
 
     avg_error = [element/(int(example_num) - 1) for element in avg_error]
+
+    #can display a particular example
+    #display(1)
     
     print("Average error:", avg_error)
 
