@@ -1,7 +1,7 @@
 import constant
 import math
 #Main Light Area of Effect function
-def LAOE(alt, azi, orien, userPosition, blindsState, light):
+def LAOE(alt, azi, orien, userPosition, light):
 
     if (light):
         return constant.winHeight
@@ -27,7 +27,7 @@ def LAOE(alt, azi, orien, userPosition, blindsState, light):
 
     #If not, find the necessary change
 
-    return blindsChange(windowCoords, projectionCoords, userPosition, blindsState)
+    return blindsChange(windowCoords, projectionCoords, userPosition)
 
 def intersect(windowCoords, projectionCoords, userPosition):
 
@@ -105,7 +105,7 @@ def getProjectionCoords(alt, azi):
     return (leftUpper, rightUpper, leftLower, rightLower)
 
 #Finds change to blinds necessary
-def blindsChange(windowCoords, projectionCoords, userPosition, blindsState):
+def blindsChange(windowCoords, projectionCoords, userPosition):
 
     # Find z value of top of blinds so that y value of projection of blinds is at coords of face
     (x, y, z) = userPosition
@@ -122,4 +122,4 @@ def blindsChange(windowCoords, projectionCoords, userPosition, blindsState):
     c = z - (slope * y)
     result = min(max(c, constant.height), constant.height + constant.winHeight)
 
-    return blindsState - (result - constant.height + offset)
+    return (result - constant.height + offset)

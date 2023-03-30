@@ -9,7 +9,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import math
 from getsuncalc import get_suncalc
-from constant import address, camera_height, winHeight, orientation
+from constant import address, camera_height, winHeight, orientation, fullTurn, rotation
 
 import LAOE
 
@@ -95,17 +95,24 @@ def main():
 
                 # distance (from bottom of window) blinds should be
                 # current_blinds_state = LAOE.LAOE(altitude, azimuth, orientation, face_distances[0], blinds_state, photoresistor)
-                current_blinds_state = LAOE.LAOE(altitude, azimuth, orientation, face_distances[0], blinds_state, 0)
+                current_blinds_state = LAOE.LAOE(altitude, azimuth, orientation, face_distances[0], 0)
                 print("FACE DISTANCE", face_distances[0])
                 print("LAOE", current_blinds_state)
-                move = blinds_state - current_blinds_state
+                move = "forwards, 0"
+                change = blinds_state - current_blinds_state
+                if (change > 0):
+                    move = f"backward, {abs(change) * fullTurn // rotation}"
+                else:
+                    move = f"forward, {abs(change) * fullTurn // rotation}"
                 # print("Sending to Arduino: ", move)
                 # send number of rotations and direction
                 #arduino.write(move, move < 0)
                 blinds_state = current_blinds_state
-            else:
+            #else:
                 #arduino.write(0)
-                blinds_state = 0
+
+                #No change to blinds for now?
+                #blinds_state = 0
 
             cv2.waitKey(30)
             
