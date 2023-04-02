@@ -4,7 +4,7 @@ import math
 def LAOE(alt, azi, orien, userPosition, light):
 
     if (not light):
-        return constant.winHeight
+        return (False, constant.winHeight)
 
     #Corners are defined from the perspective of a person inside the room looking out
     #Using azimuth relative to the window
@@ -26,11 +26,11 @@ def LAOE(alt, azi, orien, userPosition, light):
     print(inLAOE)
 
     if (not inLAOE):
-        return constant.winHeight
+        return (False, constant.winHeight)
 
     #If not, find the necessary change
 
-    return blindsChange(windowCoords, projectionCoords, userPosition)
+    return blindsChange(alt, windowCoords, projectionCoords, userPosition)
 
 def intersect(alt, windowCoords, projectionCoords, userPosition):
 
@@ -43,10 +43,10 @@ def intersect(alt, windowCoords, projectionCoords, userPosition):
     (wRightUpperX, wRightUpperY, _) = wRightUpper
     (wLeftLowerX, wLeftLowerY, _) = wLeftLower
     (wRightLowerX, wRightLowerY,_) = wRightLower
-    (pLeftUpperX, pLeftUpperY) = pLeftUpper
-    (pRightUpperX, pRightUpperY) = pRightUpper
-    (pLeftLowerX, pLeftLowerY) = pLeftLower
-    (pRightLowerX, pRightLowerY) = pRightLower
+    (pLeftUpperX, pLeftUpperY, _) = pLeftUpper
+    (pRightUpperX, pRightUpperY, _) = pRightUpper
+    (pLeftLowerX, pLeftLowerY, _) = pLeftLower
+    (pRightLowerX, pRightLowerY, _) = pRightLower
     (x, y, z) = userPosition
 
     #Check for vertical intersection
@@ -89,22 +89,22 @@ def getProjectionCoords(alt, azi, orien):
     #left upper corner
     leftUpperX = (totalWinHeight / math.tan(math.radians(alt))) * math.sin(math.radians(orien - azi)) - (constant.winWidth / 2.0)
     leftUpperY = (totalWinHeight / math.tan(math.radians(alt)))* math.cos(math.radians(orien - azi))
-    leftUpper = (leftUpperX + offset, leftUpperY + offset)
+    leftUpper = (leftUpperX + offset, leftUpperY + offset, 0)
 
     #right upper corner
     rightUpperX = (totalWinHeight / math.tan(math.radians(alt))) * math.sin(math.radians(orien - azi)) + (constant.winWidth / 2.0)
     rightUpperY = (totalWinHeight / math.tan(math.radians(alt))) * math.cos(math.radians(orien - azi))
-    rightUpper = (rightUpperX + offset, rightUpperY + offset)
+    rightUpper = (rightUpperX + offset, rightUpperY + offset, 0)
 
     #left lower corner
     leftLowerX = (constant.height / math.tan(math.radians(alt))) * math.sin(math.radians(orien - azi)) - (constant.winWidth / 2.0)
     leftLowerY = (constant.height / math.tan(math.radians(alt)) )* math.cos(math.radians(orien - azi))
-    leftLower = (leftLowerX + offset, leftLowerY + offset)
+    leftLower = (leftLowerX + offset, leftLowerY + offset, 0)
 
     #right lower corner
     rightLowerX = (constant.height / math.tan(math.radians(alt))) * math.sin(math.radians(orien - azi)) + (constant.winWidth / 2.0)
     rightLowerY = (constant.height / math.tan(math.radians(alt)))* math.cos(math.radians(orien - azi))
-    rightLower = (rightLowerX + offset, rightLowerY + offset)
+    rightLower = (rightLowerX + offset, rightLowerY + offset, 0)
 
     return (leftUpper, rightUpper, leftLower, rightLower)
 
@@ -128,7 +128,7 @@ def blindsChange(alt, windowCoords, projectionCoords, userPosition):
     c = z - (slope * y)
     result = min(max(c, constant.height), totalWinHeight)
 
-    return (result - constant.height + offset)
+    return (True, result - constant.height + offset)
 
 def ledgeOffsetHeight(alt):
     angle = 90 - alt
