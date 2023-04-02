@@ -23,13 +23,14 @@ def main():
 
     dataRate = 9600
     arduino = serial.Serial("COM11", dataRate, timeout=2)
+    sample_size = 3
 
     try:
         while True:
             available = "available" in arduino.readline().decode().strip().lower()
             sample = []
             while available:
-                if len(sample) < 3:
+                if len(sample) < sample_size:
                     #fetches latest unread frames (better for single camera vs. poll_for_frames)
                     unaligned_frames = pipeline.wait_for_frames()
 
@@ -97,24 +98,25 @@ def main():
                         sample.append(LAOE_output)
                         move = "forwards, 0"
 
-                    #print("SAMPLE", sample)
-
                     cv2.waitKey(30)
                 else:
-                    #print("SAMPLE", sample, len(sample))
-                    inLAOE = max(sample, key=lambda t: t[0])
-                    current_blinds_state = sample[4][1]
-                    if inLAOE:
+                    print("SAMPLE", sample, len(sample))
+                    num_true = 0
+                    for i in range(sample_size):
+                        if sample[i][0] is True:
+                            num_true += 0
+                    current_blinds_state = sample[sample_size-1][1]
+                    if num_true >= int(sample_size//2):
                         change = blinds_state - current_blinds_state
                         if change > 0:
                             move = f"backward, {abs(change) * fullTurn // rotation}"
                             # send number of rotations and direction
-                            #print(move)
+                            print(move)
                             arduino.write(move.encode())
                             available = False
                         elif change < 0:
                             move = f"forward, {abs(change) * fullTurn // rotation}"
-                            #print(move)
+                            print(move)
                             arduino.write(move.encode())
                             available = False
                         blinds_state = current_blinds_state
