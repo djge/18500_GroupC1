@@ -30,8 +30,14 @@ def main():
         gray = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
 
         face = front_cascade.detectMultiScale(gray, 1.1, 4)
+
         if len(face) == 0:
             print("WARNING: No faces found")
+            while(True):
+                cv2.namedWindow('RealSense', cv2.WINDOW_KEEPRATIO)
+                cv2.resizeWindow('RealSense', 426, 240)
+                cv2.imshow('RealSense', color_img)
+                cv2.waitKey(30)
             return
         if len(face) > 1:
             print("WARNING: More than one face found")

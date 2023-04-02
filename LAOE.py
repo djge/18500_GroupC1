@@ -3,7 +3,7 @@ import math
 #Main Light Area of Effect function
 def LAOE(alt, azi, orien, userPosition, light):
 
-    if (light):
+    if (not light):
         return constant.winHeight
 
     #Corners are defined from the perspective of a person inside the room looking out

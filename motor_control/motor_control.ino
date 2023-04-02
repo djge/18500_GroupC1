@@ -36,6 +36,7 @@ void loop()
 
   //Parse Command
   String teststr = Serial.readString();  //read until timeout
+  Serial.println(teststr);
   teststr.trim();                        // remove any \r \n whitespace at the end of the String
 
   int commaIndex = teststr.indexOf(",");
@@ -52,9 +53,8 @@ void loop()
     } else {
       digitalWrite(dirPin, LOW);
     }
-    Serial.println("Enter Loop");
     digitalWrite(motorEnPin, LOW);
-    for(int j = 0 ; j <= rotation ; j++)  //Run the motor to the input rotation at the input speed.
+    for(int j = 0 ; j < rotation ; j++)  //Run the motor to the input rotation at the input speed.
     {
       digitalWrite(motorPin, HIGH);
       delay(motorSpe);

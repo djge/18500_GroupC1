@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 import math
-from constant import address, camera_height, winHeight, orientation
+from constant import address, testing_height, winHeight, orientation
 
 def display(example_num):
     [color_img, x, y, w, h] = predict(example_num, display=True)
@@ -13,7 +13,7 @@ def display(example_num):
         cv2.waitKey(30)
 
 def calculate_error(predicted, real):
-    error = [abs((predicted[i] - real[i])/real[i]) for i in range(3)]
+    error = [abs((predicted[i] - real[i])) for i in range(3)]
     return error
 
 def predict(example_num, display = False):
@@ -23,8 +23,8 @@ def predict(example_num, display = False):
     f = open("distance_test_data/depth"+str(example_num)+'.txt', "r")
     d = float(f.read())
     f.close()
-    horiz_fov = 87 #degrees
-    vert_fov = 58
+    horiz_fov = 90 #degrees
+    vert_fov = 65
 
     gray = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
 
@@ -40,7 +40,7 @@ def predict(example_num, display = False):
         x_mid, y_mid = [int(x + w/2), int(y + h)]
         pixels_diff_x, pixels_diff_y = x_mid - origin[0],  origin[1] - y_mid
         angle_x, angle_y = pixels_diff_x*horiz_angle, pixels_diff_y*vert_angle
-        face_z = d*math.sin(angle_y) + camera_height
+        face_z = d*math.sin(angle_y) + testing_height
         face_y = d*math.cos(angle_y)*math.cos(angle_x)
         face_x = d*math.cos(angle_y)*math.sin(angle_x)
         
@@ -61,13 +61,15 @@ def main():
         measured_data = f_data.readline().split(", ")
         measured_data = [float(element[2:]) for element in measured_data]
         avg_error = [(avg_error[i] + calculate_error(calculated, measured_data)[i]) for i in range(3)]
+        print("CALCULATED",calculated)
+        print("MEASURED",measured_data, "\n")
     f_data.close()
 
     avg_error = [element/(int(example_num) - 1) for element in avg_error]
 
-    print("Average error:", avg_error)
+    #print("Average error:", avg_error)
     #can display a particular example
-    #display(1)
+    #display(4)
 
 if __name__ == '__main__':
     main()
