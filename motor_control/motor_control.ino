@@ -36,7 +36,7 @@ void loop()
 
   //Parse Command
   String teststr = Serial.readString();  //read until timeout
-  Serial.println(teststr);
+  //Serial.println(teststr);
   teststr.trim();                        // remove any \r \n whitespace at the end of the String
 
   int commaIndex = teststr.indexOf(",");
