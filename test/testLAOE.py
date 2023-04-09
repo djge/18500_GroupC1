@@ -75,7 +75,7 @@ def testGetProjectionCoords():
     print(f"Got an error of {error}\n")
     print("\n")
 
-        #Case 4 (top left and right 02/15 10:44 am)
+    #Case 4 (top left and right 02/15 10:44 am)
 
     projectionCoords = getProjectionCoords(53.03, 169.93, 170)
     (pLeftUpper, pRightUpper, pLeftLower, pRightLower) = projectionCoords
@@ -97,5 +97,75 @@ def testGetProjectionCoords():
     error = (abs((x - testX)/testX) + abs((y - testY)/testY)) / 2
     print(f"Got an error of {error}\n")
     print("\n")
+
+    #Case 5 (top left and right 03/29 12:37 am)
+
+    projectionCoords = getProjectionCoords(51.52, 160.73, 170)
+    (pLeftUpper, pRightUpper, pLeftLower, pRightLower) = projectionCoords
+    print("Testing Case 5 Upper Left...\n")
+    #Result: (176, 282) relative to upper left -> (157, 282) relative to camera
+    caseResults = (-0.04572,1.40208)
+    print(f"Expected {caseResults}, got {pLeftUpper}\n")
+    (testX, testY) = caseResults
+    (x, y) = pLeftUpper
+    error = (abs((x - testX)/testX) + abs((y - testY)/testY)) / 2
+    print(f"Got an error of {error}\n")
+    print("\n")
+    print("Testing Case 5 Upper Right...\n")
+    #Result: (176, 282) relative to upper right -> (195, 282) relative to camera
+    caseResults = (0.40894, 1.397)
+    print(f"Expected {caseResults}, got {pRightUpper}\n")
+    (testX, testY) = caseResults
+    (x, y) = pRightUpper
+    error = (abs((x - testX)/testX) + abs((y - testY)/testY)) / 2
+    print(f"Got an error of {error}\n")
+    print("\n")
+
+    #Case 6 (top left and right 03/29 12:51 am)
+
+    projectionCoords = getProjectionCoords(52.28, 166.26, 170)
+    (pLeftUpper, pRightUpper, pLeftLower, pRightLower) = projectionCoords
+    print("Testing Case 6 Upper Left...\n")
+    #Result: (176, 282) relative to upper left -> (157, 282) relative to camera
+    caseResults = (-0.1397, 1.36398)
+    print(f"Expected {caseResults}, got {pLeftUpper}\n")
+    (testX, testY) = caseResults
+    (x, y) = pLeftUpper
+    error = (abs((x - testX)/testX) + abs((y - testY)/testY)) / 2
+    print(f"Got an error of {error}\n")
+    print("\n")
+    print("Testing Case 6 Upper Right...\n")
+    #Result: (176, 282) relative to upper right -> (195, 282) relative to camera
+    caseResults = (0.3683, 1.36398)
+    print(f"Expected {caseResults}, got {pRightUpper}\n")
+    (testX, testY) = caseResults
+    (x, y) = pRightUpper
+    error = (abs((x - testX)/testX) + abs((y - testY)/testY)) / 2
+    print(f"Got an error of {error}\n")
+    print("\n")
+
+    #Case 7 (top left and right 03/29 1:01 am)
+
+    projectionCoords = getProjectionCoords(52.67, 170.30, 170)
+    (pLeftUpper, pRightUpper, pLeftLower, pRightLower) = projectionCoords
+    print("Testing Case 7 Upper Left...\n")
+    #Result: (176, 282) relative to upper left -> (157, 282) relative to camera
+    caseResults = (-0.2921, 1.3462)
+    print(f"Expected {caseResults}, got {pLeftUpper}\n")
+    (testX, testY) = caseResults
+    (x, y) = pLeftUpper
+    error = (abs((x - testX)/testX) + abs((y - testY)/testY)) / 2
+    print(f"Got an error of {error}\n")
+    print("\n")
+    print("Testing Case 7 Upper Right...\n")
+    #Result: (176, 282) relative to upper right -> (195, 282) relative to camera
+    caseResults = (0.1778, 1.3462)
+    print(f"Expected {caseResults}, got {pRightUpper}\n")
+    (testX, testY) = caseResults
+    (x, y) = pRightUpper
+    error = (abs((x - testX)/testX) + abs((y - testY)/testY)) / 2
+    print(f"Got an error of {error}\n")
+    print("\n")
+
 
 testGetProjectionCoords()
