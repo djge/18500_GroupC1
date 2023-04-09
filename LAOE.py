@@ -64,8 +64,8 @@ def intersect(alt, windowCoords, projectionCoords, userPosition):
     constRight = wRightUpperY - (wRightUpperX * slopeRight)
 
     # Since x increases left to right but y increases up to down, we invert the y inequality
-    if ((z < ((slopeUpper * y) + constUpper)) and (z > ((slopeLower * y) + constLower)) and
-        (y < ((slopeLeft * x) + constLeft)) and (y > ((slopeRight * x) + constRight) )):
+    if ((z < ((slopeUpper * y) + constUpper) + 0.01) and (z > ((slopeLower * y) + constLower) - 0.01) and
+        (y < ((slopeLeft * x) + constLeft) + 0.01) and (y > ((slopeRight * x) + constRight) - 0.01)):
         return True
 
     return False
