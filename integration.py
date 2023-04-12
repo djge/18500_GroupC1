@@ -22,7 +22,7 @@ def main():
     blinds_state = winHeight
 
     dataRate = 9600
-    arduino = serial.Serial("COM11", dataRate, timeout=2)
+    arduino = serial.Serial("COM3", dataRate, timeout=2)
     sample_size = 3
 
     try:
@@ -86,9 +86,9 @@ def main():
                     #TODO: Find out which box (if there are multiple because of false positives) to use
                     if face_distances:
                         closest_face = min(face_distances, key = lambda t: math.sqrt(t[0]**2 + t[1]**2 + t[2]**2))
-                        #azimuth, altitude = get_suncalc(address)
+                        azimuth, altitude = get_suncalc(address)
                         #fake azimuth/altitude
-                        azimuth, altitude = test_suncalc(address)
+                        #azimuth, altitude = test_suncalc(address)
 
                         #photoresistor = arduino.readline().decode().rstrip()  # read photoresistor input
 

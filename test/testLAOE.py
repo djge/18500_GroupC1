@@ -167,5 +167,27 @@ def testGetProjectionCoords():
     print(f"Got an error of {error}\n")
     print("\n")
 
+    #Case 8 (top left and right 03/29 1:01 am)
+
+    projectionCoords = getProjectionCoords(	26.43, 256.96, 260)
+    (pLeftUpper, pRightUpper, pLeftLower, pRightLower) = projectionCoords
+    print("Testing Case 8 Lower Left...\n")
+    #Result: (176, 282) relative to upper left -> (157, 282) relative to camera
+    caseResults = (-0.2159, 1.4478)
+    print(f"Expected {caseResults}, got {pLeftLower}\n")
+    (testX, testY) = caseResults
+    (x, y, _) = pLeftLower
+    error = (abs((x - testX)/testX) + abs((y - testY)/testY)) / 2
+    print(f"Got an error of {error}\n")
+    print("\n")
+    print("Testing Case 8 Lower Right...\n")
+    #Result: (176, 282) relative to upper right -> (195, 282) relative to camera
+    caseResults = (0.3937, 1.4478)
+    print(f"Expected {caseResults}, got {pRightLower}\n")
+    (testX, testY) = caseResults
+    (x, y, _) = pRightLower
+    error = (abs((x - testX)/testX) + abs((y - testY)/testY)) / 2
+    print(f"Got an error of {error}\n")
+    print("\n")
 
 testGetProjectionCoords()

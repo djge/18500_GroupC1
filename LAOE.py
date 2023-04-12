@@ -23,6 +23,7 @@ def LAOE(alt, azi, orien, userPosition, light):
 
     #Check if the person is affected by the sun, if not then open blinds fully
     inLAOE = intersect(alt, windowCoords, projectionCoords, userPosition)
+    print("USERPOSITION", userPosition)
     print(inLAOE)
 
     if (not inLAOE):
@@ -105,6 +106,9 @@ def getProjectionCoords(alt, azi, orien):
     rightLowerX = (constant.height / math.tan(math.radians(alt))) * math.sin(math.radians(orien - azi)) + (constant.winWidth / 2.0)
     rightLowerY = (constant.height / math.tan(math.radians(alt)))* math.cos(math.radians(orien - azi))
     rightLower = (rightLowerX + offset, rightLowerY + offset, 0)
+
+    print("LEFTUPPER", leftUpper)
+    print("RIGHTUPPER", rightUpper)
 
     return (leftUpper, rightUpper, leftLower, rightLower)
 
