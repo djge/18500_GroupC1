@@ -46,7 +46,7 @@ void loop()
   if (teststr == "light") {
     val = analogRead(analogPin);          // read the input pin
     //Serial.println((val < threshold));    // return light detection info
-    Serial.println((val));    // return light detection info
+    Serial.println((val < threshold));    // return light detection info
   } else if ((dirStr == "forward") || (dirStr == "backward")) {
     if(dirStr == "forward"){
       digitalWrite(dirPin, HIGH);

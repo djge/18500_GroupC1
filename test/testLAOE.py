@@ -6,7 +6,7 @@ from LAOE import getProjectionCoords, intersect
 
 def testGetProjectionCoords():
 
-    #Case 1 (top left and right 02/15 10:14 am)
+    #Case 1 (top left and right 02/15 10:14 am, house 1)
 
     projectionCoords = getProjectionCoords(27.87, 140.78, 180)
     (pLeftUpper, pRightUpper, pLeftLower, pRightLower) = projectionCoords
@@ -29,7 +29,7 @@ def testGetProjectionCoords():
     print(f"Got an error of {error}\n")
     print("\n")
 
-    #Case 2 (top left and right 02/15 10:33 am)
+    #Case 2 (top left and right 02/15 10:33 am, house 1)
 
     projectionCoords = getProjectionCoords(30.04, 145.46, 180)
     (pLeftUpper, pRightUpper, pLeftLower, pRightLower) = projectionCoords
@@ -52,7 +52,7 @@ def testGetProjectionCoords():
     print(f"Got an error of {error}\n")
     print("\n")
 
-    #Case 3 (top left and right 02/15 10:44 am)
+    #Case 3 (top left and right 02/15 10:44 am, house 1)
 
     projectionCoords = getProjectionCoords(31.18, 148.28, 180)
     (pLeftUpper, pRightUpper, pLeftLower, pRightLower) = projectionCoords
@@ -75,7 +75,7 @@ def testGetProjectionCoords():
     print(f"Got an error of {error}\n")
     print("\n")
 
-    #Case 4 (top left and right 02/15 10:44 am)
+    #Case 4 (top left and right 02/15 10:44 am, house 1)
 
     projectionCoords = getProjectionCoords(53.03, 169.93, 170)
     (pLeftUpper, pRightUpper, pLeftLower, pRightLower) = projectionCoords
@@ -98,7 +98,7 @@ def testGetProjectionCoords():
     print(f"Got an error of {error}\n")
     print("\n")
 
-    #Case 5 (top left and right 03/29 12:37 am)
+    #Case 5 (top left and right 03/29 12:37 am, house 2)
 
     projectionCoords = getProjectionCoords(51.52, 160.73, 170)
     (pLeftUpper, pRightUpper, pLeftLower, pRightLower) = projectionCoords
@@ -121,7 +121,7 @@ def testGetProjectionCoords():
     print(f"Got an error of {error}\n")
     print("\n")
 
-    #Case 6 (top left and right 03/29 12:51 am)
+    #Case 6 (top left and right 03/29 12:51 am, house 2)
 
     projectionCoords = getProjectionCoords(52.28, 166.26, 170)
     (pLeftUpper, pRightUpper, pLeftLower, pRightLower) = projectionCoords
@@ -144,7 +144,7 @@ def testGetProjectionCoords():
     print(f"Got an error of {error}\n")
     print("\n")
 
-    #Case 7 (top left and right 03/29 1:01 am)
+    #Case 7 (top left and right 03/29 1:01 am, , house 3)
 
     projectionCoords = getProjectionCoords(52.67, 170.30, 170)
     (pLeftUpper, pRightUpper, pLeftLower, pRightLower) = projectionCoords
@@ -167,7 +167,7 @@ def testGetProjectionCoords():
     print(f"Got an error of {error}\n")
     print("\n")
 
-    #Case 8 (top left and right 03/29 1:01 am)
+    #Case 8 (top left and right 03/29 1:01 am, , house 3)
 
     projectionCoords = getProjectionCoords(	26.43, 256.96, 260)
     (pLeftUpper, pRightUpper, pLeftLower, pRightLower) = projectionCoords
