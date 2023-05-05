@@ -124,7 +124,7 @@ def main():
                     if sample[i][0] is True:
                         num_true += 1
                 current_blinds_state = sample[sample_size-1][1]
-                if num_true >= int(sample_size//2):
+                if num_true > int(sample_size//2):
                     change = blinds_state - current_blinds_state
                     if change > 0:
                         move = f"backward, {abs(change) * fullTurn // rotation}"
