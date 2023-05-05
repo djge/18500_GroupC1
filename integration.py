@@ -146,6 +146,9 @@ def main():
                     print("STOP")
                     arduino.write(stopCommand.encode())
                     remaining = arduino.readline().decode().rstrip()
+                    if "available" in remaining:
+                        available = True
+                    remaining = arduino.readline().decode().rstrip()
                     print("4", remaining)
                     while (not remaining.isnumeric and "invalid" not in remaining):
                         remaining = (float(arduino.readline().decode().rstrip()) * rotation) // fullTurn
