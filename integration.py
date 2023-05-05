@@ -22,16 +22,20 @@ def main():
     blinds_state = winHeight
 
     dataRate = 9600
-    arduino = serial.Serial("COM3", dataRate, timeout=2)
+    arduino = serial.Serial("/dev/ttyACM0", dataRate, timeout=2)
     sample_size = 3
     stopCommand = "stop"
     currentDir = "forward"
+    available = "available" in arduino.readline().decode().strip().lower()
+    loop = False
 
     try:
         sample = []
         while True:
-            #available = "available" in arduino.readline().decode().strip().lower()
             
+            if (not available):
+                available = "available" in arduino.readline().decode().strip().lower()
+
             if len(sample) < sample_size:
                 #fetches latest unread frames (better for single camera vs. poll_for_frames)
                 unaligned_frames = pipeline.wait_for_frames()
@@ -88,15 +92,17 @@ def main():
                 #TODO: Find out which box (if there are multiple because of false positives) to use
                 if face_distances:
                     closest_face = min(face_distances, key = lambda t: math.sqrt(t[0]**2 + t[1]**2 + t[2]**2))
-                    #azimuth, altitude = get_suncalc(address)
+                    print(closest_face)
+                    azimuth, altitude = get_suncalc(address)
                     #fake azimuth/altitude
-                    azimuth, altitude = test_suncalc(address)
+                    #azimuth, altitude = test_suncalc(address)
                     lightCommand = "light"
                     photoresistor = "1"
-                    if ("available" in arduino.readline().decode().strip().lower()):
+                    if (available):
                         arduino.write(lightCommand.encode())
                         photoresistor = arduino.readline().decode().rstrip()  # read photoresistor input
                         print(photoresistor)
+                        available = False
                     
 
                     # distance (from bottom of window) blinds should be
@@ -128,16 +134,17 @@ def main():
                         currentDir = "forward"
                     
                     
-                    if ("available" in arduino.readline().decode().strip().lower()):
+                    if (available):
                         print(move)
                         arduino.write(move.encode())
-                    blinds_state = current_blinds_state
+                        available = False
+                        blinds_state = current_blinds_state
                 #print("LAOE", current_blinds_state)
-                else:                    
+                else:             
                     print("STOP")
                     arduino.write(stopCommand.encode())
                     remaining = arduino.readline().decode().rstrip()
-                    while (not remaining.isnumeric):
+                    while (not remaining.isnumeric and "invalid" not in remaining):
                         remaining = (float(arduino.readline().decode().rstrip()) * rotation) // fullTurn
                         if (currentDir == "forward"):
                             blinds_state -= remaining

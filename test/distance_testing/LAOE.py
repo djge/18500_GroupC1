@@ -3,7 +3,7 @@ import math
 #Main Light Area of Effect function
 def LAOE(alt, azi, orien, userPosition, light):
 
-    if (light != "1"):
+    if (not light):
         return (False, constant.winHeight)
 
     #Corners are defined from the perspective of a person inside the room looking out
@@ -23,8 +23,7 @@ def LAOE(alt, azi, orien, userPosition, light):
 
     #Check if the person is affected by the sun, if not then open blinds fully
     inLAOE = intersect(alt, windowCoords, projectionCoords, userPosition)
-    print("USERPOSITION", userPosition)
-    #print(inLAOE)
+    print(inLAOE)
 
     if (not inLAOE):
         return (False, constant.winHeight)
@@ -65,14 +64,8 @@ def intersect(alt, windowCoords, projectionCoords, userPosition):
     constRight = wRightUpperY - (wRightUpperX * slopeRight)
 
     # Since x increases left to right but y increases up to down, we invert the y inequality
-
-    lowerBoundZ = min((slopeUpper * y) + constUpper, (slopeLower * y) + constLower)
-    upperBoundZ = max((slopeUpper * y) + constUpper, (slopeLower * y) + constLower)
-    lowerBoundY = min((slopeLeft * x) + constLeft, (slopeRight * x) + constRight)
-    upperBoundY = max((slopeLeft * x) + constLeft, (slopeRight * x) + constRight)
-
-    if ((z <= upperBoundZ + 0.01) and (z >= lowerBoundZ - 0.01) and 
-        (y <= upperBoundY + 0.01) and (y >= lowerBoundY - 0.01)):
+    if ((z < ((slopeUpper * y) + constUpper)) and (z > ((slopeLower * y) + constLower)) and
+        (y < ((slopeLeft * x) + constLeft)) and (y > ((slopeRight * x) + constRight) )):
         return True
 
     return False
