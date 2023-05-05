@@ -150,12 +150,12 @@ def main():
                         available = True
                     print("4", remaining)
                     #remaining is either numeric or has "invalid"
-                    while (not remaining.isnumeric and "Invalid" not in remaining):
+                    while (not remaining.isnumeric() and "Invalid" not in remaining):
                         print("STOP2")
                         remaining = (arduino.readline().decode().rstrip())
                         if "Available" in remaining:
                             available = True
-                    if ("Invalid" not in remaining):
+                    if (remaining.isnumeric()):
                         remainingN = float(remaining) * rotation // fullTurn
                         if (currentDir == "forward"):
                             blinds_state -= remainingN
