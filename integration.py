@@ -26,7 +26,7 @@ def main():
     sample_size = 3
     stopCommand = "stop"
     currentDir = "forward"
-    available = "available" in arduino.readline().decode().strip().lower()
+    available = "Available" in arduino.readline().decode().strip()
     print("1", available)
     loop = False
 
@@ -35,7 +35,7 @@ def main():
         while True:
             
             if (not available):
-                available = "available" in arduino.readline().decode().strip().lower()
+                available = "Available" in arduino.readline().decode().strip()
                 print("2", available)
 
             if len(sample) < sample_size:
@@ -146,15 +146,15 @@ def main():
                     print("STOP")
                     arduino.write(stopCommand.encode())
                     remaining = arduino.readline().decode().rstrip()
-                    if "available" in remaining:
+                    if "Available" in remaining:
                         available = True
                     print("4", remaining)
-
-                    while (not remaining.isnumeric and "invalid" not in remaining):
+                    #remaining is either numeric or has "invalid"
+                    while (not remaining.isnumeric and "Invalid" not in remaining):
                         remaining = (arduino.readline().decode().rstrip())
-                        if "available" in remaining:
+                        if "Available" in remaining:
                             available = True
-                    if ("invalid" not in remaining):
+                    if ("Invalid" not in remaining):
                         remainingN = float(remaining) * rotation // fullTurn
                         if (currentDir == "forward"):
                             blinds_state -= remainingN
