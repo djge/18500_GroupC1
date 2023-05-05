@@ -143,7 +143,7 @@ def main():
                         blinds_state = current_blinds_state
                 #print("LAOE", current_blinds_state)
                 else:             
-                    print("STOP")
+                    print("STOP1")
                     arduino.write(stopCommand.encode())
                     remaining = arduino.readline().decode().rstrip()
                     if "Available" in remaining:
@@ -151,6 +151,7 @@ def main():
                     print("4", remaining)
                     #remaining is either numeric or has "invalid"
                     while (not remaining.isnumeric and "Invalid" not in remaining):
+                        print("STOP2")
                         remaining = (arduino.readline().decode().rstrip())
                         if "Available" in remaining:
                             available = True
