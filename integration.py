@@ -148,14 +148,18 @@ def main():
                     remaining = arduino.readline().decode().rstrip()
                     if "available" in remaining:
                         available = True
-                    remaining = arduino.readline().decode().rstrip()
                     print("4", remaining)
+
                     while (not remaining.isnumeric and "invalid" not in remaining):
-                        remaining = (float(arduino.readline().decode().rstrip()) * rotation) // fullTurn
+                        remaining = (arduino.readline().decode().rstrip())
+                        if "available" in remaining:
+                            available = True
+                    if ("invalid" not in remaining):
+                        remainingN = float(remaining) * rotation // fullTurn
                         if (currentDir == "forward"):
-                            blinds_state -= remaining
+                            blinds_state -= remainingN
                         else:
-                            blinds_state += remaining
+                            blinds_state += remainingN
 
                 sample = []
     finally:
