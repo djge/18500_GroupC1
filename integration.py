@@ -27,6 +27,7 @@ def main():
     stopCommand = "stop"
     currentDir = "forward"
     available = "available" in arduino.readline().decode().strip().lower()
+    print("1", available)
     loop = False
 
     try:
@@ -35,6 +36,7 @@ def main():
             
             if (not available):
                 available = "available" in arduino.readline().decode().strip().lower()
+                print("2", available)
 
             if len(sample) < sample_size:
                 #fetches latest unread frames (better for single camera vs. poll_for_frames)
@@ -101,7 +103,7 @@ def main():
                     if (available):
                         arduino.write(lightCommand.encode())
                         photoresistor = arduino.readline().decode().rstrip()  # read photoresistor input
-                        print(photoresistor)
+                        print("3", photoresistor)
                         available = False
                     
 
@@ -144,6 +146,7 @@ def main():
                     print("STOP")
                     arduino.write(stopCommand.encode())
                     remaining = arduino.readline().decode().rstrip()
+                    print("4", remaining)
                     while (not remaining.isnumeric and "invalid" not in remaining):
                         remaining = (float(arduino.readline().decode().rstrip()) * rotation) // fullTurn
                         if (currentDir == "forward"):
