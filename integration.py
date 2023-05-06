@@ -131,7 +131,7 @@ def main():
                 #print("LAOE", current_blinds_state)
                 #only need to stop if blinds are 
                 elif not available:             
-                    #print("STOP1")
+                    print("STOP1")
                     arduino.write(stopCommand.encode())
                     remaining = arduino.readline().decode().rstrip()
                     if "Available" in remaining:

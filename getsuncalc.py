@@ -21,7 +21,7 @@ def test_suncalc(location):
     position = suncalc.get_position(date, location.longitude, location.latitude)
     alt = math.degrees(position['altitude'])
     azi = math.degrees(position['azimuth'])
-    print(azi, alt)
+    #print(azi, alt)
     return azi + 180, alt
 
 def main():
@@ -29,8 +29,8 @@ def main():
     date = datetime.now()
     geolocator = Nominatim(user_agent="capstone")
     location = geolocator.geocode(address, timeout=None)
-    #get_suncalc(location)
-    test_suncalc(location)
+    get_suncalc(location)
+    #test_suncalc(location)
     '''
     position = suncalc.get_position(date, location.longitude, location.latitude)
     print(math.degrees(position['azimuth']), math.degrees(position['altitude']))

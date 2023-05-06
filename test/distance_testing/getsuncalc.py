@@ -13,7 +13,7 @@ def get_coordinates():
 def get_suncalc(longitude, latitude):
     date = datetime.now()
     position = suncalc.get_position(date, longitude, latitude)
-    print(math.degrees(position['azimuth']), math.degrees(position['altitude']))
+    #print(math.degrees(position['azimuth']), math.degrees(position['altitude']))
     return math.degrees(position['azimuth']), math.degrees(position['altitude'])
 
 def test_suncalc(longitude, latitude):
