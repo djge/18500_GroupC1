@@ -25,24 +25,23 @@ def main():
     arduino = serial.Serial("/dev/ttyACM0", dataRate, timeout=2)
     sample_size = 3
     stopCommand = "stop"
+    lightCommand = "light"
     currentDir = "forward"
     available = "Available" in arduino.readline().decode().strip()
     print("1", available)
-    loop = False
 
     try:
         sample = []
         while True:
-            
+            #if not available, read for availability
             if (not available):
                 available = "Available" in arduino.readline().decode().strip()
                 print("2", available)
 
+            #take samples
             if len(sample) < sample_size:
-                #fetches latest unread frames (better for single camera vs. poll_for_frames)
                 unaligned_frames = pipeline.wait_for_frames()
 
-                #align color and depth frames
                 align = rs.align(rs.stream.color)
                 frames = align.process(unaligned_frames)
 
@@ -51,8 +50,6 @@ def main():
                 if not (color_frame and depth_frame):
                     continue
                 color_img = np.asanyarray(color_frame.get_data())
-
-                #Haar cascades only work with grayscale
                 gray = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
 
                 front = front_cascade.detectMultiScale(gray, 1.1, 4)
@@ -64,7 +61,7 @@ def main():
                 vert_angle = math.radians(vert_fov/color_img.shape[0])
                 
                 origin = (color_img.shape[1]/2, color_img.shape[0]/2)
-                face_distances = [] #array of tuples (x,y)
+                face_distances = []
 
                 isZero = False
 
@@ -75,54 +72,40 @@ def main():
                         if d == 0:
                             isZero = True
                             break
-                        
                         pixels_diff_x, pixels_diff_y = x_mid - origin[0],  origin[1] - y_mid
                         angle_x, angle_y = pixels_diff_x*horiz_angle, pixels_diff_y*vert_angle
-
                         face_z = d*math.sin(angle_y) + camera_height
                         face_y = d*math.cos(angle_y)*math.cos(angle_x)
-                        
                         face_x = -d*math.cos(angle_y)*math.sin(angle_x)
-
                         face_distances.append((face_x, face_y, face_z))
 
-                    cv2.rectangle(color_img, (x, y), (x+w, y+h), (255, 0, 0), 2)
-                    
-                if isZero:
-                    continue
-
-                #TODO: Find out which box (if there are multiple because of false positives) to use
-                if face_distances:
+                if face_distances and not isZero:
                     closest_face = min(face_distances, key = lambda t: math.sqrt(t[0]**2 + t[1]**2 + t[2]**2))
-                    print(closest_face)
                     azimuth, altitude = get_suncalc(address)
                     #fake azimuth/altitude
                     #azimuth, altitude = test_suncalc(address)
-                    lightCommand = "light"
+                    
                     photoresistor = "1"
                     if (available):
                         arduino.write(lightCommand.encode())
                         photoresistor = arduino.readline().decode().rstrip()  # read photoresistor input
                         print("3", photoresistor)
                         available = False
-                    
 
-                    # distance (from bottom of window) blinds should be
-                    # current_blinds_state = LAOE.LAOE(altitude, azimuth, orientation, face_distances[0], blinds_state, photoresistor)
-                    LAOE_output = LAOE.LAOE(altitude, azimuth, orientation, closest_face, photoresistor)
-                    sample.append(LAOE_output)
-                    move = "forwards, 0"
+                        # distance (from bottom of window) blinds should be
+                        # current_blinds_state = LAOE.LAOE(altitude, azimuth, orientation, face_distances[0], blinds_state, photoresistor)
+                        LAOE_output = LAOE.LAOE(altitude, azimuth, orientation, closest_face, photoresistor)
+                        sample.append(LAOE_output)
+                        move = "forwards, 0"
                 else:
                     sample.append((False, 0))
-
                 cv2.waitKey(30)
             else:
-                
                 print("SAMPLE", sample, len(sample))
                 num_true = 0
                 for i in range(sample_size):
-                    if sample[i][0] is True:
-                        num_true += 1
+                    if sample[i][0]: num_true += 1
+                
                 current_blinds_state = sample[sample_size-1][1]
                 if num_true > int(sample_size//2):
                     change = blinds_state - current_blinds_state
@@ -135,32 +118,37 @@ def main():
                         move = f"forward, {abs(change) * fullTurn // rotation}"
                         currentDir = "forward"
                     
-                    
                     if (available):
                         print(move)
                         arduino.write(move.encode())
                         available = False
                         blinds_state = current_blinds_state
                 #print("LAOE", current_blinds_state)
-                else:             
+                #only need to stop if blinds are moving
+                elif not available:             
                     print("STOP1")
                     arduino.write(stopCommand.encode())
                     remaining = arduino.readline().decode().rstrip()
                     if "Available" in remaining:
                         available = True
+                        continue
                     print("4", remaining)
                     #remaining is either numeric or has "invalid"
-                    while (not remaining.isnumeric() and "Invalid" not in remaining):
+                    # while (not remaining.isnumeric() and "Invalid" not in remaining):
+                    while (not remaining.isnumeric()):
                         print("STOP2")
                         remaining = (arduino.readline().decode().rstrip())
                         if "Available" in remaining:
                             available = True
-                    if (remaining.isnumeric()):
-                        remainingN = float(remaining) * rotation // fullTurn
-                        if (currentDir == "forward"):
-                            blinds_state -= remainingN
-                        else:
-                            blinds_state += remainingN
+                            continue
+                    if available:
+                        continue
+                    #if (remaining.isnumeric()):
+                    remainingN = float(remaining) * rotation // fullTurn
+                    if (currentDir == "forward"):
+                        blinds_state -= remainingN
+                    else:
+                        blinds_state += remainingN
 
                 sample = []
     finally:
