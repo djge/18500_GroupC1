@@ -111,13 +111,17 @@ def main():
                 if num_true > int(sample_size//2):
                     change = blinds_state - current_blinds_state
                     if change > 0:
-                        move = f"backward, {abs(change) * fullTurn // rotation}"
-                        currentDir = "backward"
+                        #move = f"backward, {abs(change) * fullTurn // rotation}"
+                        #currentDir = "backward"
+                        move = f"forward, {abs(change) * fullTurn // rotation}"
+                        currentDir = "forward"
                         # send number of rotations and direction
                         
                     elif change < 0:
-                        move = f"forward, {abs(change) * fullTurn // rotation}"
-                        currentDir = "forward"
+                        #move = f"forward, {abs(change) * fullTurn // rotation}"
+                        #currentDir = "forward"
+                        move = f"backward, {abs(change) * fullTurn // rotation}"
+                        currentDir = "backward"
                     
                     if (available):
                         print(move)
@@ -146,7 +150,9 @@ def main():
                         continue
                     #if (remaining.isnumeric()):
                     remainingN = float(remaining) * rotation // fullTurn
-                    if (currentDir == "forward"):
+                    
+                    #if (currentDir == "forward"):
+                    if (currentDir == "backward"):
                         blinds_state -= remainingN
                     else:
                         blinds_state += remainingN
