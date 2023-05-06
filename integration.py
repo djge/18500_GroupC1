@@ -110,7 +110,7 @@ def main():
                 
                 if num_true > int(sample_size//2):
                     current_blinds_state = sample[sample_size-1][1]
-                    for index in range(sample_size, -1, -1):
+                    for index in range(sample_size - 1, -1, -1):
                         if sample[index]:
                             current_blinds_state = sample[index][1]
                             
