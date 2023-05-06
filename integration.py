@@ -94,7 +94,7 @@ def main():
 
                         # distance (from bottom of window) blinds should be
                         # current_blinds_state = LAOE.LAOE(altitude, azimuth, orientation, face_distances[0], blinds_state, photoresistor)
-                        LAOE_output = LAOE.LAOE(altitude, azimuth, orientation, closest_face, photoresistor)
+                        LAOE_output = LAOE.LAOE(altitude, azimuth, orientation, closest_face, "1")
                         sample.append(LAOE_output)
                         move = "forwards, 0"
                 else:
