@@ -99,8 +99,8 @@ def main():
                         LAOE_output = LAOE.LAOE(altitude, azimuth, orientation, closest_face, "1")
                         sample.append(LAOE_output)
                         move = "forwards, 0"
-                else:
-                    sample.append((False, 0))
+                #else:
+                    #sample.append((False, 0))
                 cv2.waitKey(30)
             else:
                 print("SAMPLE", sample)
