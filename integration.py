@@ -102,7 +102,7 @@ def main():
                     sample.append((False, 0))
                 cv2.waitKey(30)
             else:
-                #print("SAMPLE", sample, len(sample))
+                print("SAMPLE", sample)
                 num_true = 0
                 for i in range(sample_size):
                     if sample[i][0]: num_true += 1
@@ -129,7 +129,7 @@ def main():
                         available = False
                         blinds_state = current_blinds_state
                 #print("LAOE", current_blinds_state)
-                #only need to stop if blinds are moving
+                #only need to stop if blinds are 
                 elif not available:             
                     #print("STOP1")
                     arduino.write(stopCommand.encode())
@@ -156,6 +156,12 @@ def main():
                         blinds_state -= remainingN
                     else:
                         blinds_state += remainingN
+                else:
+                    change = winHeight - blinds_state
+                    move = f"backward, {abs(change) * fullTurn // rotation}"
+                    arduino.write(move.encode())
+                    blinds_state = winHeight
+                    available = False
 
                 sample = []
     finally:

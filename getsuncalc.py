@@ -12,7 +12,6 @@ def get_suncalc(location):
     position = suncalc.get_position(date, location.longitude, location.latitude)
     alt = math.degrees(position['altitude'])
     azi = math.degrees(position['azimuth'])
-    print(azi + 180, alt)
     return azi + 180, alt
 
 def test_suncalc(location):
