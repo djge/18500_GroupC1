@@ -23,7 +23,7 @@ def main():
 
     dataRate = 9600
     arduino = serial.Serial("/dev/ttyACM0", dataRate, timeout=2)
-    sample_size = 10
+    sample_size = 5
     stopCommand = "stop"
     lightCommand = "light"
     currentDir = "forward"
@@ -40,7 +40,7 @@ def main():
 
             #take samples
             if len(sample) < sample_size:
-                print("Taking Sample")
+                #print("Taking Sample")
                 unaligned_frames = pipeline.wait_for_frames()
 
                 align = rs.align(rs.stream.color)
