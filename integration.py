@@ -40,6 +40,7 @@ def main():
 
             #take samples
             if len(sample) < sample_size:
+                print("Taking Sample")
                 unaligned_frames = pipeline.wait_for_frames()
 
                 align = rs.align(rs.stream.color)
@@ -107,8 +108,12 @@ def main():
                 for i in range(sample_size):
                     if sample[i][0]: num_true += 1
                 
-                current_blinds_state = sample[sample_size-1][1]
                 if num_true > int(sample_size//2):
+                    current_blinds_state = sample[sample_size-1][1]
+                    for index in range(sample_size, -1, -1):
+                        if sample[index]:
+                            current_blinds_state = sample[index][1]
+                            
                     change = blinds_state - current_blinds_state
                     if change > 0:
                         #move = f"backward, {abs(change) * fullTurn // rotation}"
