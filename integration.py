@@ -23,7 +23,7 @@ def main():
 
     dataRate = 9600
     arduino = serial.Serial("/dev/ttyACM0", dataRate, timeout=2)
-    sample_size = 6
+    sample_size = 10
     stopCommand = "stop"
     lightCommand = "light"
     currentDir = "forward"
@@ -77,7 +77,7 @@ def main():
                         angle_x, angle_y = pixels_diff_x*horiz_angle, pixels_diff_y*vert_angle
                         face_z = d*math.sin(angle_y) + camera_height
                         face_y = d*math.cos(angle_y)*math.cos(angle_x)
-                        face_x = -d*math.cos(angle_y)*math.sin(angle_x)
+                        face_x = -d*math.cos(angle_y)*math.sin(angle_x) + 0.3
                         face_distances.append((face_x, face_y, face_z))
 
                 if face_distances and not isZero:
@@ -108,7 +108,7 @@ def main():
                 for i in range(sample_size):
                     if sample[i][0]: num_true += 1
                 
-                if num_true > int(sample_size//2):
+                if num_true >= 1:
                     current_blinds_state = sample[sample_size-1][1]
                     for index in range(sample_size - 1, -1, -1):
                         if sample[index]:
@@ -135,7 +135,7 @@ def main():
                         blinds_state = current_blinds_state
                 #print("LAOE", current_blinds_state)
                 #only need to stop if blinds are 
-                elif not available:             
+                elif not available and num_true == 0:             
                     print("STOP1")
                     arduino.write(stopCommand.encode())
                     remaining = arduino.readline().decode().rstrip()
