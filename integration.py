@@ -77,7 +77,7 @@ def main():
                         angle_x, angle_y = pixels_diff_x*horiz_angle, pixels_diff_y*vert_angle
                         face_z = d*math.sin(angle_y) + camera_height
                         face_y = d*math.cos(angle_y)*math.cos(angle_x)
-                        face_x = -d*math.cos(angle_y)*math.sin(angle_x) + 0.3
+                        face_x = -d*math.cos(angle_y)*math.sin(angle_x)
                         face_distances.append((face_x, face_y, face_z))
 
                 if face_distances and not isZero:
@@ -108,7 +108,7 @@ def main():
                 for i in range(sample_size):
                     if sample[i][0]: num_true += 1
                 
-                if num_true >= 1:
+                if num_true >= sample_size//2:
                     current_blinds_state = sample[sample_size-1][1]
                     for index in range(sample_size - 1, -1, -1):
                         if sample[index]:
