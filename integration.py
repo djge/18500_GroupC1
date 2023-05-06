@@ -28,7 +28,7 @@ def main():
     lightCommand = "light"
     currentDir = "forward"
     available = "Available" in arduino.readline().decode().strip()
-    print("1", available)
+    #print("1", available)
 
     try:
         sample = []
@@ -36,7 +36,7 @@ def main():
             #if not available, read for availability
             if (not available):
                 available = "Available" in arduino.readline().decode().strip()
-                print("2", available)
+                #print("2", available)
 
             #take samples
             if len(sample) < sample_size:
@@ -81,6 +81,7 @@ def main():
 
                 if face_distances and not isZero:
                     closest_face = min(face_distances, key = lambda t: math.sqrt(t[0]**2 + t[1]**2 + t[2]**2))
+                    #PHOTORESISTOR 1
                     #azimuth, altitude = get_suncalc(address)
                     #fake azimuth/altitude
                     azimuth, altitude = test_suncalc(address)
@@ -89,7 +90,7 @@ def main():
                     if (available):
                         arduino.write(lightCommand.encode())
                         photoresistor = arduino.readline().decode().rstrip()  # read photoresistor input
-                        print("3", photoresistor)
+                        #print("3", photoresistor)
                         available = False
 
                         # distance (from bottom of window) blinds should be
@@ -101,7 +102,7 @@ def main():
                     sample.append((False, 0))
                 cv2.waitKey(30)
             else:
-                print("SAMPLE", sample, len(sample))
+                #print("SAMPLE", sample, len(sample))
                 num_true = 0
                 for i in range(sample_size):
                     if sample[i][0]: num_true += 1
@@ -126,17 +127,17 @@ def main():
                 #print("LAOE", current_blinds_state)
                 #only need to stop if blinds are moving
                 elif not available:             
-                    print("STOP1")
+                    #print("STOP1")
                     arduino.write(stopCommand.encode())
                     remaining = arduino.readline().decode().rstrip()
                     if "Available" in remaining:
                         available = True
                         continue
-                    print("4", remaining)
+                    #print("4", remaining)
                     #remaining is either numeric or has "invalid"
                     # while (not remaining.isnumeric() and "Invalid" not in remaining):
                     while (not remaining.isnumeric()):
-                        print("STOP2")
+                        #print("STOP2")
                         remaining = (arduino.readline().decode().rstrip())
                         if "Available" in remaining:
                             available = True
