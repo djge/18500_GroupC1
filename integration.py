@@ -81,9 +81,9 @@ def main():
 
                 if face_distances and not isZero:
                     closest_face = min(face_distances, key = lambda t: math.sqrt(t[0]**2 + t[1]**2 + t[2]**2))
-                    azimuth, altitude = get_suncalc(address)
+                    #azimuth, altitude = get_suncalc(address)
                     #fake azimuth/altitude
-                    #azimuth, altitude = test_suncalc(address)
+                    azimuth, altitude = test_suncalc(address)
                     
                     photoresistor = "1"
                     if (available):
