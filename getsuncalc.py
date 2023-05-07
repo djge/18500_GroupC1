@@ -15,7 +15,7 @@ def get_suncalc(location):
     return azi + 180, alt
 
 def test_suncalc(location):
-    date = datetime(2023, 4, 26, 18, 0, 0, 0)
+    date = datetime(2023, 4, 26, 17, 30, 0, 0)
     geolocator = Nominatim(user_agent="capstone")
     location = geolocator.geocode(location, timeout=None)
     position = suncalc.get_position(date, location.longitude, location.latitude)
