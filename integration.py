@@ -140,7 +140,7 @@ def main():
                     if available:
                         continue
                     #if (remaining.isnumeric()):
-                    remainingN = float(remaining) * rotation // fullTurn
+                    remainingN = float(remaining) * rotation / fullTurn
                     
                     #if (currentDir == "forward"):
                     print("BEFORE STOP", blinds_state)
@@ -148,7 +148,7 @@ def main():
                     print("AFTER STOP", blinds_state)
                     
                 #if person is not in room at all
-                elif blinds_state <= winHeight and sum(x for _, x in sample) == 0:
+                elif blinds_state < winHeight and sum(x for _, x in sample) == 0:
                     change = winHeight - blinds_state
                     move = f"backward, {float(change) * fullTurn // rotation}"
                     currentDir = "backward"
