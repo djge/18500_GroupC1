@@ -14,7 +14,7 @@ def main():
     pipeline.start()
     config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
     config.enable_stream(rs.stream.depth, 640, 480, rs.format.bgr8, 30)
-    front_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    front_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt_tree.xml')
     side_cascade = cv2.CascadeClassifier('haarcascade_profileface.xml')
 
     horiz_fov = 87 #degrees
@@ -54,9 +54,9 @@ def main():
                 gray = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
 
                 front = front_cascade.detectMultiScale(gray, 1.1, 4)
-                #side = side_cascade.detectMultiScale(gray, 1.1, 4)
+                side = side_cascade.detectMultiScale(gray, 1.1, 4)
 
-                face = front #if len(front) != 0 else side
+                face = front if len(front) != 0 else side
 
                 horiz_angle = math.radians(horiz_fov/color_img.shape[1])
                 vert_angle = math.radians(vert_fov/color_img.shape[0])
@@ -102,6 +102,7 @@ def main():
                 else:
                     sample.append((False, 0))
                 cv2.waitKey(30)
+                print(sample)
             else:
                 print("SAMPLE", sample)
                 num_true = 0
