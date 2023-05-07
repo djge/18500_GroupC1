@@ -144,7 +144,7 @@ def main():
                     
                     #if (currentDir == "forward"):
                     print("BEFORE STOP", blinds_state)
-                    blinds_state = blinds_state - remainingN if currentDir == "backward" else blinds_state + remainingN
+                    blinds_state = blinds_state - remainingN
                     print("AFTER STOP", blinds_state)
                     
                 #if person is not in room at all
