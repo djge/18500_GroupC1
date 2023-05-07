@@ -14,12 +14,13 @@ def main():
     pipeline.start()
     config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
     config.enable_stream(rs.stream.depth, 640, 480, rs.format.bgr8, 30)
-    front_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt.xml')
+    front_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt2.xml')
     side_cascade = cv2.CascadeClassifier('haarcascade_profileface.xml')
 
     horiz_fov = 87 #degrees
     vert_fov = 58
     blinds_state = winHeight
+    print("INITIAL STATE", blinds_state)
 
     dataRate = 9600
     arduino = serial.Serial("/dev/ttyACM0", dataRate, timeout=2)
@@ -119,10 +120,11 @@ def main():
                         arduino.write(move.encode())
                         currentDir = newCurrentDir
                         available = False
+                        print("BEFORE MOVE", blinds_state)
                         blinds_state = current_blinds_state
+                        print("AFTER MOVE", blinds_state)
                 #only need to stop if no one is there or person is not in light, blinds are moving forward, and not available
                 elif not available and num_true == 0 and currentDir == "forward":             
-                    print("STOP1")
                     arduino.write(stopCommand.encode())
                     remaining = arduino.readline().decode().rstrip()
                     if "Available" in remaining:
@@ -141,7 +143,9 @@ def main():
                     remainingN = float(remaining) * rotation // fullTurn
                     
                     #if (currentDir == "forward"):
+                    print("BEFORE STOP", blinds_state)
                     blinds_state = blinds_state - remainingN if currentDir == "backward" else blinds_state + remainingN
+                    print("AFTER STOP", blinds_state)
                     
                 #if person is not in room at all
                 elif blinds_state >= winHeight and sum(x for _, x in sample) == 0:
@@ -149,7 +153,9 @@ def main():
                     move = f"backward, {float(change) * fullTurn // rotation}"
                     currentDir = "backward"
                     arduino.write(move.encode())
+                    print("BEFORE COMPLETE RETRACTION", blinds_state)
                     blinds_state = winHeight
+                    print("AFTER COMPLETE RETRACTION", blinds_state)
                     available = False
 
                 sample = []
