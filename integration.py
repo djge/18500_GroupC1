@@ -153,6 +153,29 @@ def main():
                     print("BEFORE STOP", blinds_state)
                     blinds_state = blinds_state + remainingN
                     print("AFTER STOP", blinds_state)
+                #if person is in room and we are retracting
+                elif not available and num_true >= sample_size//2 and currentDir == "backward":             
+                    arduino.write(stopCommand.encode())
+                    remaining = arduino.readline().decode().rstrip()
+                    if "Available" in remaining:
+                        available = True
+                        continue
+                    #print("4", remaining)
+                    while (not remaining.isnumeric()):
+                        #print("STOP2")
+                        remaining = (arduino.readline().decode().rstrip())
+                        if "Available" in remaining:
+                            available = True
+                            continue
+                    if available:
+                        continue
+                    #if (remaining.isnumeric()):
+                    remainingN = float(remaining) * rotation / fullTurn
+                    
+                    #if (currentDir == "forward"):
+                    print("BEFORE STOP", blinds_state)
+                    blinds_state = blinds_state - remainingN
+                    print("AFTER STOP", blinds_state)
                     
                 #if person is not in room at all
                 elif blinds_state < winHeight and sum(x for _, x in sample) == 0:
