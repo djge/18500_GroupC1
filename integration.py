@@ -101,8 +101,7 @@ def main():
                         move = "forwards, 0"
                 else:
                     sample.append((False, 0))
-                cv2.waitKey(30)
-                print(sample)
+                cv2.waitKey(20)
             else:
                 print("SAMPLE", sample)
                 num_true = 0
@@ -134,9 +133,8 @@ def main():
                         arduino.write(move.encode())
                         available = False
                         blinds_state = current_blinds_state
-                #print("LAOE", current_blinds_state)
-                #only need to stop if blinds are 
-                elif not available and num_true == 0:             
+                #only need to stop if no one is there or person is not in light, blinds are moving forward, and not available
+                elif not available and num_true == 0 and currentDir == "forward":             
                     print("STOP1")
                     arduino.write(stopCommand.encode())
                     remaining = arduino.readline().decode().rstrip()
@@ -144,8 +142,6 @@ def main():
                         available = True
                         continue
                     #print("4", remaining)
-                    #remaining is either numeric or has "invalid"
-                    # while (not remaining.isnumeric() and "Invalid" not in remaining):
                     while (not remaining.isnumeric()):
                         #print("STOP2")
                         remaining = (arduino.readline().decode().rstrip())
@@ -155,16 +151,18 @@ def main():
                     if available:
                         continue
                     #if (remaining.isnumeric()):
-                    remainingN = float(remaining) * rotation // fullTurn
+                    remainingN = remaining * rotation // fullTurn
                     
                     #if (currentDir == "forward"):
                     if (currentDir == "backward"):
                         blinds_state -= remainingN
                     else:
                         blinds_state += remainingN
-                else:
+                #if person is not in room at all
+                elif blinds_state >= 0 and sum(x for _, x in sample) == 0:
                     change = winHeight - blinds_state
-                    move = f"backward, {abs(change) * fullTurn // rotation}"
+                    move = f"backward, {change * fullTurn // rotation}"
+                    currentDir = "backward"
                     arduino.write(move.encode())
                     blinds_state = winHeight
                     available = False
