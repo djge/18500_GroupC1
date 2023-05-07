@@ -112,6 +112,8 @@ def main():
                             
                     change = blinds_state - current_blinds_state
                     moveAmount = abs(float(change)) * fullTurn // rotation
+                    
+                    current_blinds_state = blinds_state - float(moveAmount) * rotation / fullTurn
                     newCurrentDir = "forward" if change >= 0 else "backward"
                     move = f"{newCurrentDir}, {moveAmount}"
                     
