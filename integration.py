@@ -102,7 +102,7 @@ def main():
                 cv2.waitKey(20)
             else:
                 print("SAMPLE", sample)
-                num_true = sum(int(x) for x, _ in sample) == 0
+                num_true = sum(int(x) for x, _ in sample)
                 
                 if num_true >= sample_size//2:
                     current_blinds_state = sample[sample_size-1][1]
