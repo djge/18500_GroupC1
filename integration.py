@@ -118,14 +118,14 @@ def main():
                     if change > 0:
                         #move = f"backward, {abs(change) * fullTurn // rotation}"
                         #currentDir = "backward"
-                        move = f"forward, {abs(change) * fullTurn // rotation}"
+                        move = f"forward, {abs(float(change)) * fullTurn // rotation}"
                         currentDir = "forward"
                         # send number of rotations and direction
                         
                     elif change < 0:
                         #move = f"forward, {abs(change) * fullTurn // rotation}"
                         #currentDir = "forward"
-                        move = f"backward, {abs(change) * fullTurn // rotation}"
+                        move = f"backward, {abs(float(change)) * fullTurn // rotation}"
                         currentDir = "backward"
                     
                     if (available):
@@ -151,7 +151,7 @@ def main():
                     if available:
                         continue
                     #if (remaining.isnumeric()):
-                    remainingN = remaining * rotation // fullTurn
+                    remainingN = float(remaining) * rotation // fullTurn
                     
                     #if (currentDir == "forward"):
                     if (currentDir == "backward"):
@@ -161,7 +161,7 @@ def main():
                 #if person is not in room at all
                 elif blinds_state >= 0 and sum(x for _, x in sample) == 0:
                     change = winHeight - blinds_state
-                    move = f"backward, {change * fullTurn // rotation}"
+                    move = f"backward, {float(change) * fullTurn // rotation}"
                     currentDir = "backward"
                     arduino.write(move.encode())
                     blinds_state = winHeight
