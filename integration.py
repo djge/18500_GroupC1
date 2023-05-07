@@ -96,41 +96,28 @@ def main():
 
                         # distance (from bottom of window) blinds should be
                         # current_blinds_state = LAOE.LAOE(altitude, azimuth, orientation, face_distances[0], blinds_state, photoresistor)
-                        LAOE_output = LAOE.LAOE(altitude, azimuth, orientation, closest_face, "1")
-                        sample.append(LAOE_output)
-                        move = "forwards, 0"
+                        sample.append(LAOE.LAOE(altitude, azimuth, orientation, closest_face, "1"))
                 else:
                     sample.append((False, 0))
                 cv2.waitKey(20)
             else:
                 print("SAMPLE", sample)
-                num_true = 0
-                for i in range(sample_size):
-                    if sample[i][0]: num_true += 1
+                num_true = sum(int(x) for x, _ in sample) == 0
                 
                 if num_true >= sample_size//2:
                     current_blinds_state = sample[sample_size-1][1]
-                    for index in range(sample_size - 1, -1, -1):
-                        if sample[index]:
-                            current_blinds_state = sample[index][1]
+                    for is_in_light, rotations in sample:
+                        if is_in_light: current_blinds_state = rotations
                             
                     change = blinds_state - current_blinds_state
-                    if change > 0:
-                        #move = f"backward, {abs(change) * fullTurn // rotation}"
-                        #currentDir = "backward"
-                        move = f"forward, {abs(float(change)) * fullTurn // rotation}"
-                        currentDir = "forward"
-                        # send number of rotations and direction
-                        
-                    elif change < 0:
-                        #move = f"forward, {abs(change) * fullTurn // rotation}"
-                        #currentDir = "forward"
-                        move = f"backward, {abs(float(change)) * fullTurn // rotation}"
-                        currentDir = "backward"
+                    moveAmount = abs(float(change)) * fullTurn // rotation
+                    newCurrentDir = "forward" if change >= 0 else "backward"
+                    move = f"{newCurrentDir}, {moveAmount}"
                     
-                    if (available):
+                    if available and moveAmount != 0:
                         print(move)
                         arduino.write(move.encode())
+                        currentDir = newCurrentDir
                         available = False
                         blinds_state = current_blinds_state
                 #only need to stop if no one is there or person is not in light, blinds are moving forward, and not available
@@ -154,10 +141,8 @@ def main():
                     remainingN = float(remaining) * rotation // fullTurn
                     
                     #if (currentDir == "forward"):
-                    if (currentDir == "backward"):
-                        blinds_state -= remainingN
-                    else:
-                        blinds_state += remainingN
+                    blinds_state = blinds_state - remainingN if currentDir == "backward" else blinds_state + remainingN
+                    
                 #if person is not in room at all
                 elif blinds_state >= 0 and sum(x for _, x in sample) == 0:
                     change = winHeight - blinds_state
