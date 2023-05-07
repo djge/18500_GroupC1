@@ -106,9 +106,11 @@ def main():
                 num_true = sum(int(x) for x, _ in sample)
                 
                 if num_true >= sample_size//2:
-                    current_blinds_state = sample[sample_size-1][1]
+                    # current_blinds_state = sample[sample_size-1][1]
+                    average_move = 0
                     for is_in_light, rotations in sample:
-                        if is_in_light: current_blinds_state = rotations
+                        if is_in_light: average_move += rotations
+                    current_blinds_state = average_move / num_true
                             
                     change = blinds_state - current_blinds_state
                     moveAmount = abs(float(change)) * fullTurn // rotation
