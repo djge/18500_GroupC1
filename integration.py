@@ -41,7 +41,6 @@ def main():
 
             #take samples
             if len(sample) < sample_size:
-                print("Taking Sample")
                 unaligned_frames = pipeline.wait_for_frames()
 
                 align = rs.align(rs.stream.color)
@@ -101,6 +100,7 @@ def main():
                 else:
                     sample.append((False, 0))
                 cv2.waitKey(20)
+                print("UNFINISHED SAMPLE", sample)
             else:
                 print("SAMPLE", sample)
                 num_true = sum(int(x) for x, _ in sample)
