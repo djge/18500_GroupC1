@@ -144,7 +144,7 @@ def main():
                     blinds_state = blinds_state - remainingN if currentDir == "backward" else blinds_state + remainingN
                     
                 #if person is not in room at all
-                elif blinds_state >= 0 and sum(x for _, x in sample) == 0:
+                elif blinds_state >= winHeight and sum(x for _, x in sample) == 0:
                     change = winHeight - blinds_state
                     move = f"backward, {float(change) * fullTurn // rotation}"
                     currentDir = "backward"
