@@ -41,7 +41,7 @@ def main():
 
             #take samples
             if len(sample) < sample_size:
-                #print("Taking Sample")
+                print("Taking Sample")
                 unaligned_frames = pipeline.wait_for_frames()
 
                 align = rs.align(rs.stream.color)
@@ -150,9 +150,9 @@ def main():
                     remainingN = float(remaining) * rotation / fullTurn
                     
                     #if (currentDir == "forward"):
-                    print("BEFORE STOP", blinds_state)
+                    print("BEFORE STOP MOVE", blinds_state)
                     blinds_state = blinds_state + remainingN
-                    print("AFTER STOP", blinds_state)
+                    print("AFTER STOP MOVE", blinds_state)
                 #if person is in room and we are retracting
                 elif not available and num_true >= sample_size//2 and currentDir == "backward":             
                     arduino.write(stopCommand.encode())
@@ -173,9 +173,9 @@ def main():
                     remainingN = float(remaining) * rotation / fullTurn
                     
                     #if (currentDir == "forward"):
-                    print("BEFORE STOP", blinds_state)
+                    print("BEFORE STOP RETRACTION", blinds_state)
                     blinds_state = blinds_state - remainingN
-                    print("AFTER STOP", blinds_state)
+                    print("AFTER STOP RETRACTION", blinds_state)
                     
                 #if person is not in room at all
                 elif blinds_state < winHeight and sum(x for _, x in sample) == 0:
