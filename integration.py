@@ -24,7 +24,7 @@ def main():
 
     dataRate = 9600
     arduino = serial.Serial("/dev/ttyACM0", dataRate, timeout=2)
-    sample_size = 5
+    sample_size = 3
     stopCommand = "stop"
     lightCommand = "light"
     currentDir = "forward"
