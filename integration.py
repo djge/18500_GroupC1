@@ -54,9 +54,9 @@ def main():
                 gray = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
 
                 front = front_cascade.detectMultiScale(gray, 1.1, 4)
-                side = side_cascade.detectMultiScale(gray, 1.1, 4)
+                #side = side_cascade.detectMultiScale(gray, 1.1, 4)
 
-                face = front if len(front) != 0 else side
+                face = front #if len(front) != 0 else side
 
                 horiz_angle = math.radians(horiz_fov/color_img.shape[1])
                 vert_angle = math.radians(vert_fov/color_img.shape[0])
