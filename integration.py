@@ -88,15 +88,15 @@ def main():
                     azimuth, altitude = test_suncalc(address)
                     
                     photoresistor = "1"
-                    if (available):
-                        arduino.write(lightCommand.encode())
-                        photoresistor = arduino.readline().decode().rstrip()  # read photoresistor input
-                        #print("3", photoresistor)
-                        available = False
+                    #if (available):
+                    #arduino.write(lightCommand.encode())
+                    #photoresistor = arduino.readline().decode().rstrip()  # read photoresistor input
+                    #print("3", photoresistor)
+                    #available = False
 
-                        # distance (from bottom of window) blinds should be
-                        # current_blinds_state = LAOE.LAOE(altitude, azimuth, orientation, face_distances[0], blinds_state, photoresistor)
-                        sample.append(LAOE.LAOE(altitude, azimuth, orientation, closest_face, "1"))
+                    # distance (from bottom of window) blinds should be
+                    # current_blinds_state = LAOE.LAOE(altitude, azimuth, orientation, face_distances[0], blinds_state, photoresistor)
+                    sample.append(LAOE.LAOE(altitude, azimuth, orientation, closest_face, "1"))
                 else:
                     sample.append((False, 0))
                 cv2.waitKey(20)
