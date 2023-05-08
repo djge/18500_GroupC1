@@ -105,7 +105,7 @@ def main():
                 print("SAMPLE", sample)
                 num_true = sum(int(x) for x, _ in sample)
                 
-                if num_true >= sample_size//2:
+                if available and num_true >= sample_size//2:
                     # current_blinds_state = sample[sample_size-1][1]
                     average_move = 0
                     for is_in_light, rotations in sample:
