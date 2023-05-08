@@ -100,7 +100,7 @@ def main():
                 else:
                     sample.append((False, 0))
                 cv2.waitKey(20)
-                print("UNFINISHED SAMPLE", sample)
+                #print("UNFINISHED SAMPLE", sample)
             else:
                 print("SAMPLE", sample)
                 num_true = sum(int(x) for x, _ in sample)
